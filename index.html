@@ -11,29 +11,31 @@
 <script>
     //primeira liga id 94
 
-    const settings = {
-        "async": true,
-        "crossDomain": true,
-        "url": "https://api-football-v1.p.rapidapi.com/v3/standings?season=2020&league=94",
+    fetch("https://api-football-v1.p.rapidapi.com/v3/standings?season=2020&league=94", {
         "method": "GET",
         "headers": {
             "x-rapidapi-host": "api-football-v1.p.rapidapi.com",
             "x-rapidapi-key": "a06cb32d05mshcec7ac543b257ffp1ba284jsne9c15de7c013"
         }
-    };
+    })
+    .then(response => {
+        return response.json();
+    })
+    .then(data => {
+        console.log(data);
 
-    $.ajax(settings).done(function (response) {
-
-        var standings = response.response[0].league.standings[0];
+        var standings = data.response[0].league.standings[0];
 
         console.log(standings);
 
-        $.each( standings, function( key, value ) {
-            console.log( key + ": " + value.team.name );
+        $.each(standings, function (key, value) {
+            console.log(key + ": " + value.team.name);
 
             $(".standings").append('<li>' + value.team.name + '</li>');
         });
-
+    })
+    .catch(err => {
+        console.error(err);
     });
 </script>
 
