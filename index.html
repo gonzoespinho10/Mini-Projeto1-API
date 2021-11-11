@@ -28,15 +28,23 @@
 
         console.log(standings);
 
-        $.each(standings, function (key, value) {
-            console.log(key + ": " + value.team.name);
-
-            $(".standings").append('<li>' + value.team.name + '</li>');
-        });
+        renderStandings(standings);
     })
     .catch(err => {
         console.error(err);
     });
+
+    console.log(isLoaded);
+
+    // criar lista das equipas por ordem do ranking
+    function renderStandings(standings) {
+        $.each(standings, function (key, value) {
+            console.log(key + ": " + value.team.name);
+
+            $(".standings").append('<li id=' + value.team.id +'>' + value.team.name + '</li>');
+        });
+    }
+
 </script>
 
 <body>
