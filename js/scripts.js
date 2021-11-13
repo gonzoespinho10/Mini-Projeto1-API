@@ -5,7 +5,7 @@ const x_rapidapi_key = "a06cb32d05mshcec7ac543b257ffp1ba284jsne9c15de7c013";
 getStandingsByLeagueIDAndSeason(94, 2020);
 
 function getStandingsByLeagueIDAndSeason(teamID, season) {
-    fetch("https://api-football-v1.p.rapidapi.com/v3/standings?season=2020&league=94", {
+    fetch("https://api-football-v1.p.rapidapi.com/v3/standings?season=" + season + "&league=" + teamID, {
         "method": "GET",
         "headers": {
             "x-rapidapi-host": x_rapidapi_host,
