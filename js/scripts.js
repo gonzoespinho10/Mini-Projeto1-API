@@ -1,6 +1,9 @@
 const x_rapidapi_host = "api-football-v1.p.rapidapi.com";
 const x_rapidapi_key = "a06cb32d05mshcec7ac543b257ffp1ba284jsne9c15de7c013";
 
+const saveChange = document.getElementById('saveChanges');
+
+
 
 getStandingsByLeagueIDAndSeason(94, 2021);
 
@@ -35,7 +38,7 @@ function getStandingsByLeagueIDAndSeason(teamID, season) {
 }
 
 function getPlayersByTeamId(teamId) {
-    fetch("https://api-football-v1.p.rapidapi.com/v3/players?team=" + teamId + "&season=2020", {
+    fetch("https://api-football-v1.p.rapidapi.com/v3/players?team=" + teamId + "&season=2021", {
         "method": "GET",
         "headers": {
             "x-rapidapi-host": x_rapidapi_host,
@@ -109,8 +112,9 @@ function renderPlayerList(teamID) {
                 //ver selectors de jQuery para escrever apenas no sitio certo
 
                 $(jogId).append
-                ('<button type="button" class="btn" onclick="openModal('+value.player.id+')" data-toggle="modal" data-target="#modalJogadores" >' +
-                    '<li class="list-group-item align-content-start" id=' + value.player.id + '><img alt="perfil" src="' + value.player.photo + '">' + value.player.name + '</li>' +
+                ('<button type="button" class="btn align-content-start" onclick="openModal('+value.player.id+')" data-toggle="modal" data-target="#modalJogadores" >' +
+                    '<li style="display: block; text-align: start;" class="list-group-item" id=' + value.player.id + '>' +
+                    '<img class="img-thumbnail rounded-circle float-left" alt="perfil" src="' + value.player.photo + '">' + value.player.name + '<i style="text-align: right;" class="fas fa-eye"></i></li>' +
                 '</button>'
                 );
             });
@@ -136,5 +140,18 @@ function openModal(playerID) {
 
         modalText.innerText = playerID;
 
+        saveChange.onclick = saveData(playerID);
+
         }
+
+function saveData (playerID) {
+
+    localStorage.setItem("playerID", playerID);
+
+    console.log((localStorage.getItem("playerID")));
+
+    return playerID;
+
+}
+
 
