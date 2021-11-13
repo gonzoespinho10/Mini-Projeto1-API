@@ -126,7 +126,13 @@ function openModal(playerID) {
 
         console.log(playerID);
 
-    var myModal = new bootstrap.Modal(document.getElementById('exampleModal'))
+
+
+    var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {});
+
+    console.log(myModal);
+
+
         document.onreadystatechange = function () {
             myModal.show();
         }
