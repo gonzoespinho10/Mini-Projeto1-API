@@ -1,52 +1,45 @@
-// // Iniciar a variavel d = documento
-//
-// var d = document;
-//
-// //criar elementos
-//
-// var accButton = d.createElement("button");
-//
-// accButton.className = "accordion-button collapsed";
-// accButton.type = "button";
-// accButton.ariaExtended = "false";
-// accButton.ariaControls = "collapse";
+const x_rapidapi_host = "api-football-v1.p.rapidapi.com";
+const x_rapidapi_key = "a06cb32d05mshcec7ac543b257ffp1ba284jsne9c15de7c013";
 
 
-fetch("https://api-football-v1.p.rapidapi.com/v3/standings?season=2020&league=94", {
-    "method": "GET",
-    "headers": {
-        "x-rapidapi-host": "api-football-v1.p.rapidapi.com",
-        "x-rapidapi-key": "a06cb32d05mshcec7ac543b257ffp1ba284jsne9c15de7c013"
-    }
-})
-    .then(response => {
-        return response.json();
+getStandingsByLeagueIDAndSeason(94, 2020);
+
+function getStandingsByLeagueIDAndSeason(teamID, season) {
+    fetch("https://api-football-v1.p.rapidapi.com/v3/standings?season=2020&league=94", {
+        "method": "GET",
+        "headers": {
+            "x-rapidapi-host": x_rapidapi_host,
+            "x-rapidapi-key": x_rapidapi_key
+        }
     })
-    .then(data => {
-        console.log(data);
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
 
-        var standings = data.response[0].league.standings[0];
+            var standings = data.response[0].league.standings[0];
 
-        var teamId = standings[0].team.id;
+            var teamId = standings[0].team.id;
 
-        console.log(standings);
+            console.log(standings);
 
-        renderStandings(standings);
+            renderStandings(standings);
 
-        getPlayersByTeamId(teamId);
+            getPlayersByTeamId(teamId);
 
-    })
-    .catch(err => {
-        console.error(err);
-    });
-
+        })
+        .catch(err => {
+            console.error(err);
+        });
+}
 
 function getPlayersByTeamId(teamId) {
     fetch("https://api-football-v1.p.rapidapi.com/v3/players?team=" + teamId + "&season=2020", {
         "method": "GET",
         "headers": {
-            "x-rapidapi-host": "api-football-v1.p.rapidapi.com",
-            "x-rapidapi-key": "a06cb32d05mshcec7ac543b257ffp1ba284jsne9c15de7c013"
+            "x-rapidapi-host": x_rapidapi_host,
+            "x-rapidapi-key": x_rapidapi_key
         }
     })
         .then(response => {
@@ -69,22 +62,19 @@ function renderStandings(standings) {
         $("#ligaPortuguesa").append
         ('<div class="accordion-item">' +
             '<h2 class="accordion-header" id="heading' + value.team.id + '">' +
-            '<button class="accordion-button collapsed" onclick="renderPlayerList(' + value.team.id + ')" type="button" data-bs-toggle="collapse" data-bs-target="#collapse' + value.team.id + '"' +
-            ' aria-expanded="false" aria-controls="collapse' + value.team.id + '">' +
-            ' ' + value.team.name + ' ' +
-            '</button>' +
-            ' <div id="collapse' + value.team.id + '" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">' +
-            ' <div class="accordion-body" id="acc-body' + value.team.id + '">' +
-            '<ul class="list-group" id="jogadores' + value.team.id + '"></ul>' +
-            '</div>' +
-            '</div>' +
-            '</div>' +
+                '<button class="accordion-button collapsed" onclick="renderPlayerList('+value.team.id+')" type="button" ' +
+                'data-bs-toggle="collapse" data-bs-target="#collapse'+value.team.id+'"'+
+                ' aria-expanded="false" aria-controls="collapse'+value.team.id+'">' +
+                ' '+value.team.name+' '+
+                '</button>'+
+                '<div id="collapse'+value.team.id+'" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">' +
+                '<div class="accordion-body" id="acc-body'+value.team.id+'">'+
+                '<ul class="list-group" id="jogadores'+value.team.id+'"></ul>'+
+                '</div>'+
             '</div>' +
             '</h2>' +
-            '</div>');
+        '</div>');
     })
-
-
 }
 
 function renderPlayerList(teamID) {
@@ -115,13 +105,12 @@ function renderPlayerList(teamID) {
             $.each(players, function (key, value) {
                 console.log(key + ": " + value.player.name);
 
-
                 // escrever apenas no body-accordion certo
                 //ver selectors de jQuery para escrever apenas no sitio certo
 
                 $(jogId).append
                 ('<button type="button" data-toggle="modal" data-target=".bd-example-modal-lg">' +
-                    '<li class="list-group-item" id='+ value.player.id +'><img alt="perfil" src="' + value.player.photo + '">' + value.player.name + '</li>' +
+                    '<li class="list-group-item" id=' + value.player.id + '><img alt="perfil" src="' + value.player.photo + '">' + value.player.name + '</li>' +
                     '</button>' +
                     '<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">' +
                     '<div class="modal-dialog modal-lg">' +
@@ -132,13 +121,10 @@ function renderPlayerList(teamID) {
                     '</div>'
                 );
             });
-
-
         })
             .catch(err => {
                 console.error(err);
             });
-
     }
 }
 
