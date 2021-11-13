@@ -109,10 +109,11 @@ function renderPlayerList(teamID) {
                 //ver selectors de jQuery para escrever apenas no sitio certo
 
                 $(jogId).append
-                ('<button type="button" data-toggle="modal" data-target=".bd-example-modal-lg">' +
+                ('<button type="button" data-toggle="modal" data-target="#exampleModal" >' +
                     '<li class="list-group-item" id=' + value.player.id + '><img alt="perfil" src="' + value.player.photo + '">' + value.player.name + '</li>' +
-                    '</button>' +
-                    '<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">' +
+                '</button>' +
+
+                    '<div id="exampleModal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">' +
                     '<div class="modal-dialog modal-lg">' +
                     '<div class="modal-content">' +
                     'Awesome' +
