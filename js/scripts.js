@@ -2,7 +2,7 @@ const x_rapidapi_host = "api-football-v1.p.rapidapi.com";
 const x_rapidapi_key = "a06cb32d05mshcec7ac543b257ffp1ba284jsne9c15de7c013";
 
 
-getStandingsByLeagueIDAndSeason(94, 2020);
+getStandingsByLeagueIDAndSeason(94, 2021);
 
 function getStandingsByLeagueIDAndSeason(teamID, season) {
     fetch("https://api-football-v1.p.rapidapi.com/v3/standings?season=" + season + "&league=" + teamID, {
@@ -87,7 +87,7 @@ function renderPlayerList(teamID) {
         console.log('render players')
         console.log(teamID)
 
-        fetch("https://api-football-v1.p.rapidapi.com/v3/players?team=" + teamID + "&season=2020", {
+        fetch("https://api-football-v1.p.rapidapi.com/v3/players?team=" + teamID + "&season=2021", {
             "method": "GET",
             "headers": {
                 "x-rapidapi-host": "api-football-v1.p.rapidapi.com",
@@ -110,7 +110,7 @@ function renderPlayerList(teamID) {
 
                 $(jogId).append
                 ('<button type="button" class="btn" onclick="openModal('+value.player.id+')" data-toggle="modal" data-target="#modalJogadores" >' +
-                    '<li class="list-group-item" id=' + value.player.id + '><img alt="perfil" src="' + value.player.photo + '">' + value.player.name + '</li>' +
+                    '<li class="list-group-item align-content-start" id=' + value.player.id + '><img alt="perfil" src="' + value.player.photo + '">' + value.player.name + '</li>' +
                 '</button>'
                 );
             });
@@ -126,21 +126,15 @@ function openModal(playerID) {
 
         console.log(playerID);
 
+        var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {});
 
+        console.log(myModal);
 
-    var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {});
-
-    console.log(myModal);
-
-
-        document.onreadystatechange = function () {
-            myModal.show();
-        }
+        myModal.show();
 
         modalText = document.getElementById('modalText');
 
         modalText.innerText = playerID;
-
 
         }
 
