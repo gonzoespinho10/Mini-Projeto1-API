@@ -109,17 +109,9 @@ function renderPlayerList(teamID) {
                 //ver selectors de jQuery para escrever apenas no sitio certo
 
                 $(jogId).append
-                ('<button type="button" data-toggle="modal" data-target="#exampleModal" >' +
+                ('<button type="button" class="btn" onclick="openModal('+value.player.id+')" data-toggle="modal" data-target="#modalJogadores" >' +
                     '<li class="list-group-item" id=' + value.player.id + '><img alt="perfil" src="' + value.player.photo + '">' + value.player.name + '</li>' +
-                '</button>' +
-
-                    '<div id="exampleModal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">' +
-                    '<div class="modal-dialog modal-lg">' +
-                    '<div class="modal-content">' +
-                    'Awesome' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>'
+                '</button>'
                 );
             });
         })
@@ -127,5 +119,22 @@ function renderPlayerList(teamID) {
                 console.error(err);
             });
     }
+
 }
+
+function openModal(playerID) {
+
+        console.log(playerID);
+
+    var myModal = new bootstrap.Modal(document.getElementById('exampleModal'))
+        document.onreadystatechange = function () {
+            myModal.show();
+        }
+
+        modalText = document.getElementById('modalText');
+
+        modalText.innerText = playerID;
+
+
+        }
 
