@@ -95,8 +95,8 @@ function renderPlayerList(teamID) {
 
                 $(jogId).append
                 ('<button type="button" class="btn" onclick="openModal(' + value.player.id + ')" data-toggle="modal" data-target="#modalJogadores" >' +
-                    '<li class="list-group-item align-content-start" id=' + value.player.id + '>' +
-                        '<img alt="perfil" src="' + value.player.photo + '">' + value.player.name +
+                    '<li class="list-group-item display-5 fs-2" style="display: block; text-align: start" id=' + value.player.id + '>' +
+                        '<img class="img-thumbnail rounded-circle float-left m-3" alt="perfil" src="' + value.player.photo + '">' + value.player.name +
                     '</li>' +
                 '</button>'
                 );
