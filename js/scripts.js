@@ -16,16 +16,10 @@ function getStandingsByLeagueIDAndSeason(teamID, season) {
             return response.json();
         })
         .then(data => {
-            console.log(data);
-
             var standings = data.response[0].league.standings[0];
-
             var teamId = standings[0].team.id;
 
-            console.log(standings);
-
             renderStandings(standings);
-
             getPlayersByTeamId(teamId);
 
         })
@@ -44,9 +38,7 @@ function getPlayersByTeamId(teamId) {
     })
         .then(response => {
             return response.json();
-        }).then(data => {
-        console.log(data);
-    })
+        })
         .catch(err => {
             console.error(err);
         });
@@ -58,7 +50,7 @@ function getPlayersByTeamId(teamId) {
 function renderStandings(standings) {
 
     $.each(standings, function (key, value) {
-        console.log(key + ": " + value.team.name);
+
         $("#ligaPortuguesa").append
         ('<div class="accordion-item">' +
             '<h2 class="accordion-header" id="heading' + value.team.id + '">' +
@@ -83,58 +75,99 @@ function renderPlayerList(teamID) {
     var jogId = $("#jogadores" + teamID);
 
     if (jogId.is(":empty")) {
-
-        console.log('render players')
-        console.log(teamID)
-
         fetch("https://api-football-v1.p.rapidapi.com/v3/players?team=" + teamID + "&season=2021", {
             "method": "GET",
             "headers": {
-                "x-rapidapi-host": "api-football-v1.p.rapidapi.com",
-                "x-rapidapi-key": "a06cb32d05mshcec7ac543b257ffp1ba284jsne9c15de7c013"
+                "x-rapidapi-host": x_rapidapi_host,
+                "x-rapidapi-key": x_rapidapi_key
             }
         })
             .then(response => {
                 return response.json();
             }).then(data => {
-            console.log(data);
 
             var players = data.response;
 
-            // collapse228
             $.each(players, function (key, value) {
-                console.log(key + ": " + value.player.name);
 
                 // escrever apenas no body-accordion certo
                 //ver selectors de jQuery para escrever apenas no sitio certo
 
                 $(jogId).append
-                ('<button type="button" class="btn" onclick="openModal('+value.player.id+')" data-toggle="modal" data-target="#modalJogadores" >' +
-                    '<li class="list-group-item align-content-start" id=' + value.player.id + '><img alt="perfil" src="' + value.player.photo + '">' + value.player.name + '</li>' +
+                ('<button type="button" class="btn" onclick="openModal(' + value.player.id + ')" data-toggle="modal" data-target="#modalJogadores" >' +
+                    '<li class="list-group-item align-content-start" id=' + value.player.id + '>' +
+                        '<img alt="perfil" src="' + value.player.photo + '">' + value.player.name +
+                    '</li>' +
                 '</button>'
                 );
             });
         })
-            .catch(err => {
-                console.error(err);
-            });
+        .catch(err => {
+            console.error(err);
+        });
     }
-
 }
 
-function openModal(playerID) {
+async function fetchPlayer(playerID = 376) {
+    try {
+        const response = await fetch("https://api-football-v1.p.rapidapi.com/v3/players?id=" + playerID + "&season=2020", {
+            "method": "GET",
+            "headers": {
+                "x-rapidapi-host": x_rapidapi_host,
+                "x-rapidapi-key": x_rapidapi_key
+            }
+        });
 
-        console.log(playerID);
+        return await response.json();
+    } catch (error) {
+        console.error(error);
+    }
+}
 
-        var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {});
+async function openModal(playerID) {
+    // referência do modal
+    var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {});
 
-        console.log(myModal);
+    var player = await fetchPlayer(playerID);
 
-        myModal.show();
+    var playerInfo = player.response[0].player
+    var playerStats = player.response[0].statistics
 
-        modalText = document.getElementById('modalText');
+    console.log(player.response[0].player);
+    console.log(player.response[0].statistics);
 
-        modalText.innerText = playerID;
+    var modalText = document.getElementById('modalText');
 
-        }
+    //modalText.innerText = playerInfo.name;
 
+    $("#modalText").append("<h2>" + playerInfo.name + "</h2><button onclick='addPlayerMyList(" + playerID + ")' type='button' class='btn btn-primary'>Primary</button>");
+
+    myModal.show();
+}
+
+function addPlayerMyList(playerID) {
+
+    console.log("add player id: " + playerID)
+
+    // Retrieve the object from storage
+    var players = JSON.parse(localStorage.getItem("playerList"));
+
+
+    console.log(players);
+
+    // inicializar caso não exista
+    if (players === null) {
+        players = [];
+    }
+
+    // adicionar jogador ao array
+    players.push(playerID);
+
+
+    // Put the object into storage
+    localStorage.setItem("playerList", JSON.stringify(players));
+}
+
+function removePlayerMyList(playerID) {
+    localStorage.removeItem('myCat');
+}
