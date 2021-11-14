@@ -1,6 +1,8 @@
 const x_rapidapi_host = "api-football-v1.p.rapidapi.com";
 const x_rapidapi_key = "a06cb32d05mshcec7ac543b257ffp1ba284jsne9c15de7c013";
 
+localStorage.clear();
+
 
 getStandingsByLeagueIDAndSeason(94, 2021);
 
@@ -61,7 +63,7 @@ function renderStandings(standings) {
                 '</button>'+
                 '<div id="collapse'+value.team.id+'" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">' +
                 '<div class="accordion-body" id="acc-body'+value.team.id+'">'+
-                '<ul class="list-group" id="jogadores'+value.team.id+'"></ul>'+
+                '<ul class="row list-group" style="flex-direction: row" id="jogadores'+value.team.id+'"></ul>'+
                 '</div>'+
             '</div>' +
             '</h2>' +
@@ -94,8 +96,8 @@ function renderPlayerList(teamID) {
                 //ver selectors de jQuery para escrever apenas no sitio certo
 
                 $(jogId).append
-                ('<button type="button" class="btn" onclick="openModal(' + value.player.id + ')" data-toggle="modal" data-target="#modalJogadores" >' +
-                    '<li class="list-group-item display-5 fs-2" style="display: block; text-align: start" id=' + value.player.id + '>' +
+                ('<button type="button" class="btn col-md-4 rounded" onclick="openModal(' + value.player.id + ')" data-toggle="modal" data-target="#modalJogadores" >' +
+                    '<li class="list-group-item display-5 fs-4" style="display: block; text-align: start" id=' + value.player.id + '>' +
                         '<img class="img-thumbnail rounded-circle float-left m-3" alt="perfil" src="' + value.player.photo + '">' + value.player.name +
                     '</li>' +
                 '</button>'
@@ -128,7 +130,7 @@ async function openModal(playerID) {
     // referência do modal
     var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {});
 
-    //dados do jogadore
+    //dados do jogador
 
     var player = await fetchPlayer(playerID);
 

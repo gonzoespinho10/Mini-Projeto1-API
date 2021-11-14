@@ -1,4 +1,19 @@
+body{
+    background-color: #2ab274;
+}
+
+
 .accordion-button:hover {
     background-color: #6bd0a1;
     opacity: 50%;
 }
+
+.accordion-collapse {
+    background-color: #2ab274;
+}
+
+#titulo {
+    color: white;
+}
+
+
