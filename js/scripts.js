@@ -119,6 +119,7 @@ async function fetchPlayer(playerID) {
 // Abrir Modal
 async function openModal(playerID) {
 
+
     // referência do modal
     var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {});
 
@@ -160,8 +161,11 @@ async function openModal(playerID) {
         '<hr>' +
         '<h3 class="display-5 fs-3" style="text-align: center">' + "Jogos: " + playerStats[0].games.appearences + '</h3>' +
         '<h3 class="display-5 fs-3" style="text-align: center">' + "Golos: " + golos + '</h3>' +
-        '<h3 class="display-5 fs-3" style="text-align: center">' + "Assistências: " + assistencias + '</h3>' +
-        "<button onclick='addPlayerMyList(" + playerID + ")' type='button' class='btn btn-primary'>Adicionar Jogador</button>");
+        '<h3 class="display-5 fs-3" style="text-align: center">' + "Assistências: " + assistencias + '</h3>');
+
+    // Botão de adicionar
+    $(".modal-footer").append(
+        "<button class='btn btn-primary' onclick='addPlayerMyList(" + playerID + ")' id=\"addButton\" type='button'>Adicionar Jogador</button>");
 
     myModal.show();
 }
