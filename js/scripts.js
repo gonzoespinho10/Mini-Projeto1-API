@@ -84,13 +84,50 @@ function renderPlayerList(teamID) {
                 // Escrever apenas no body-accordion certo
                 // Ver selectors de jQuery para escrever apenas no sitio certo
 
-                $(jogId).append
-                ('<button type="button" class="btn col-md-4 rounded" onclick="openModal(' + value.player.id + ')" data-toggle="modal" data-target="#modalJogadores" >' +
-                    '<li class="list-group-item display-5 fs-4" style="display: block; text-align: start" id=' + value.player.id + '>' +
-                    '<img class="img-thumbnail rounded-circle float-left m-3" alt="perfil" src="' + value.player.photo + '">' + value.player.name +
-                    '</li>' +
-                    '</button>'
-                );
+                var playersID = value.player.id;
+
+                // criar botão do jogador
+                var btnModal = document.createElement('button');
+                btnModal.type = 'button';
+                btnModal.className = "btn col-md-4 rounded";
+                btnModal.addEventListener("click", function (){
+                    openModal(playersID);
+                })
+                btnModal.setAttribute("data-toggle", "modal");
+                btnModal.setAttribute("data-target", "#modalJogadores");
+
+                // Criar as listas
+                var listJogador = document.createElement('li');
+                listJogador.className = "list-group-item display-5 fs-4";
+                listJogador.style.display = "block";
+                listJogador.style.textAlign = "start";
+                listJogador.id = playersID;
+
+                //Criar imagem Jogador
+                var imgJogador = document.createElement('img');
+                imgJogador.className = "img-thumbail rounded-circle float-left m3";
+                imgJogador.alt = "perfil";
+                imgJogador.src = value.player.photo;
+
+                var nomeJogador = document.createElement('span');
+                nomeJogador.textContent = value.player.name;
+                nomeJogador.color = 'black';
+
+                console.log(value.player.name);
+
+                listJogador.append(imgJogador);
+                listJogador.append(nomeJogador);
+                btnModal.append(listJogador);
+
+                $(jogId).append(btnModal);
+
+                // $(jogId).append
+                // ('<button type="button" class="btn col-md-4 rounded" onclick="openModal(' + value.player.id + ')" data-toggle="modal" data-target="#modalJogadores" >' +
+                //     '<li class="list-group-item display-5 fs-4" style="display: block; text-align: start" id=' + value.player.id + '>' +
+                //     '<img class="img-thumbnail rounded-circle float-left m-3" alt="perfil" src="' + value.player.photo + '">' + value.player.name +
+                //     '</li>' +
+                //     '</button>'
+                // );
             });
         })
             .catch(err => {
@@ -133,9 +170,6 @@ async function openModal(playerID) {
     console.log(player.response[0].player);
     console.log(player.response[0].statistics);
 
-    // var modalText = document.getElementById('modalText');
-    // modalText.innerText = playerInfo.name;
-
     // Algoritmo para escrever 0 no número de jogadores caso seja null
     if (playerStats[0].games.appearences == null) {
         playerStats[0].games.appearences = 0;
@@ -147,25 +181,64 @@ async function openModal(playerID) {
 
     $('#modalText')[0].innerHTML = '';
 
-    //Golos Marcados
+    // Golos Marcados
     var golos = playerStats[0].goals.total;
+    // Assistências
     var assistencias = playerStats[0].goals.assists;
+
+    var posicao = playerStats[0].games.position;
+
+    var nome = playerInfo.name;
+
+    var jogos = playerStats[0].games.appearences;
 
     console.log(golos);
 
-    //if ($("#modalText").innerText = )
+// Criar conteúdo do modal
 
-    // Conteúdo do Modal
-    $("#modalText").append("<h2 class='display-5' style='text-align: center'>" + playerInfo.name + "</h2>" +
-        '<h3 class="display-5 fs-5" style="text-align: center">' + "Posição: " + playerStats[0].games.position + '</h3>' +
-        '<hr>' +
-        '<h3 class="display-5 fs-3" style="text-align: center">' + "Jogos: " + playerStats[0].games.appearences + '</h3>' +
-        '<h3 class="display-5 fs-3" style="text-align: center">' + "Golos: " + golos + '</h3>' +
-        '<h3 class="display-5 fs-3" style="text-align: center">' + "Assistências: " + assistencias + '</h3>');
+    var name = document.createElement('h2');
+    name.className = "display-5";
+    name.style.textAlign = "center";
+    name.innerText = ""+nome;
+
+    var position = document.createElement('h3');
+    position.className = "display-5 fs-5";
+    position.style.textAlign = "center";
+    position.innerText = "Posição:"+posicao
+
+    linha = document.createElement('hr');
+
+    var games = document.createElement('h3');
+    games.className = "lead fs-2";
+    games.style.textAlign = "center";
+    games.innerText = "Jogos:"+jogos
+
+    var goals = document.createElement('h3');
+    goals.className = "lead fs-2";
+    goals.style.textAlign = "center";
+    goals.innerText = "Golos:"+golos
+
+    var assists = document.createElement('h3');
+    assists.className = "lead fs-2";
+    assists.style.textAlign = "center";
+    assists.innerText = "Assistências:"+assistencias
+
+
+    // Render do Conteúdo
+    $("#modalText").append(name);
+    $("#modalText").append(position);
+    $("#modalText").append(linha);
+    $("#modalText").append(games);
+    $("#modalText").append(goals);
+    $("#modalText").append(assists);
+
 
     // Botão de adicionar
-    $(".modal-footer").append(
-        "<button class='btn btn-primary' onclick='addPlayerMyList(" + playerID + ")' id=\"addButton\" type='button'>Adicionar Jogador</button>");
+    addButton = document.getElementById('addButton');
+    addButton.addEventListener('click', function () {
+       addPlayerMyList(playerID)
+    });
+    console.log(addButton);
 
     myModal.show();
 }
