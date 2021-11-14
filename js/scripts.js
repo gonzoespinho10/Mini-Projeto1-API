@@ -29,7 +29,7 @@ function getStandingsByLeagueIDAndSeason(teamID, season) {
 }
 
 function getPlayersByTeamId(teamId) {
-    fetch("https://api-football-v1.p.rapidapi.com/v3/players?team=" + teamId + "&season=2020", {
+    fetch("https://api-football-v1.p.rapidapi.com/v3/players?team=" + teamId + "&season=2021", {
         "method": "GET",
         "headers": {
             "x-rapidapi-host": x_rapidapi_host,
@@ -108,9 +108,9 @@ function renderPlayerList(teamID) {
     }
 }
 
-async function fetchPlayer(playerID = 376) {
+async function fetchPlayer(playerID) {
     try {
-        const response = await fetch("https://api-football-v1.p.rapidapi.com/v3/players?id=" + playerID + "&season=2020", {
+        const response = await fetch("https://api-football-v1.p.rapidapi.com/v3/players?id=" + playerID + "&season=2021", {
             "method": "GET",
             "headers": {
                 "x-rapidapi-host": x_rapidapi_host,
@@ -128,6 +128,8 @@ async function openModal(playerID) {
     // referência do modal
     var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {});
 
+    //dados do jogadore
+
     var player = await fetchPlayer(playerID);
 
     var playerInfo = player.response[0].player
@@ -140,7 +142,16 @@ async function openModal(playerID) {
 
     //modalText.innerText = playerInfo.name;
 
-    $("#modalText").append("<h2>" + playerInfo.name + "</h2><button onclick='addPlayerMyList(" + playerID + ")' type='button' class='btn btn-primary'>Primary</button>");
+    if(playerStats[0].games.appearences == null) {
+        playerStats[0].games.appearences = 0;
+    }
+
+    $("#modalText").append("<h2>" + playerInfo.name + "</h2>" +
+        '<hr>' +
+        '<h3>'+"Jogos: " + playerStats[0].games.appearences+'</h3>'+
+        "<button onclick='addPlayerMyList(" + playerID + ")' type='button' class='btn btn-primary'>Add Player</button>" +
+        "<hr>");
+
 
     myModal.show();
 }
@@ -166,8 +177,15 @@ function addPlayerMyList(playerID) {
 
     // Put the object into storage
     localStorage.setItem("playerList", JSON.stringify(players));
+
+    var myModalEl = document.getElementById('exampleModal')
+
+    var modal = bootstrap.Modal.getInstance(myModalEl) // Returns a Bootstrap modal instance
+
+    modal.hide();
+
 }
 
 function removePlayerMyList(playerID) {
-    localStorage.removeItem('myCat');
+    localStorage.removeItem(playerID);
 }
