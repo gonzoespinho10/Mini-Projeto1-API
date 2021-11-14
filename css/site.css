@@ -2,7 +2,6 @@ body{
     background-color: #2ab274;
 }
 
-
 .accordion-button:hover {
     background-color: #6bd0a1;
     opacity: 50%;
@@ -16,4 +15,12 @@ body{
     color: white;
 }
 
+.foto-jogador {
+    height: 80px;
+}
+
+.check-team {
+    display: flex;
+    justify-content: end;
+}
 

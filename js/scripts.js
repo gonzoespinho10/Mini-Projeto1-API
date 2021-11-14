@@ -105,15 +105,13 @@ function renderPlayerList(teamID) {
 
                 //Criar imagem Jogador
                 var imgJogador = document.createElement('img');
-                imgJogador.className = "img-thumbail rounded-circle float-left m3";
+                imgJogador.className = "img-thumbnail rounded-circle float-left m3 foto-jogador";
                 imgJogador.alt = "perfil";
                 imgJogador.src = value.player.photo;
 
                 var nomeJogador = document.createElement('span');
                 nomeJogador.textContent = value.player.name;
                 nomeJogador.color = 'black';
-
-                console.log(value.player.name);
 
                 listJogador.append(imgJogador);
                 listJogador.append(nomeJogador);
@@ -167,9 +165,6 @@ async function openModal(playerID) {
     var playerInfo = player.response[0].player
     var playerStats = player.response[0].statistics
 
-    console.log(player.response[0].player);
-    console.log(player.response[0].statistics);
-
     // Algoritmo para escrever 0 no número de jogadores caso seja null
     if (playerStats[0].games.appearences == null) {
         playerStats[0].games.appearences = 0;
@@ -191,8 +186,6 @@ async function openModal(playerID) {
     var nome = playerInfo.name;
 
     var jogos = playerStats[0].games.appearences;
-
-    console.log(golos);
 
 // Criar conteúdo do modal
 
@@ -221,8 +214,7 @@ async function openModal(playerID) {
     var assists = document.createElement('h3');
     assists.className = "lead fs-2";
     assists.style.textAlign = "center";
-    assists.innerText = "Assistências:"+assistencias
-
+    assists.innerText = "Assistências:" + assistencias
 
     // Render do Conteúdo
     $("#modalText").append(name);
@@ -232,35 +224,32 @@ async function openModal(playerID) {
     $("#modalText").append(goals);
     $("#modalText").append(assists);
 
-
     // Botão de adicionar
-    addButton = document.getElementById('addButton');
-    addButton.addEventListener('click', function () {
-       addPlayerMyList(playerID)
+    // Tirar evento de click anterior
+    $('#addButton').unbind('click');
+    // Adicionar novo evento
+    $('#addButton').click(function(){
+        addPlayerMyList(playerID)
     });
-    console.log(addButton);
 
     myModal.show();
 }
 
 //Acrescentar jogador à lista
 function addPlayerMyList(playerID) {
-
-    console.log("add player id: " + playerID)
-
     // Retrieve the object from storage
     var players = JSON.parse(localStorage.getItem("playerList"));
-
-    console.log(players);
 
     // Inicializar caso não exista
     if (players === null) {
         players = [];
     }
 
-    // Adicionar jogador ao array
-    players.push(playerID);
-
+    // Verificar se já existe no array
+    if (jQuery.inArray( playerID, players ) === -1){
+        // Adicionar jogador ao array
+        players.push(playerID);
+    }
 
     // Put the object into storage
     localStorage.setItem("playerList", JSON.stringify(players));
@@ -269,8 +258,8 @@ function addPlayerMyList(playerID) {
 
     // Fechar modal ao clicar no botão
     var modal = bootstrap.Modal.getInstance(myModalEl)
-    modal.hide();
 
+    modal.hide();
 }
 
 function removePlayerMyList(playerID) {
