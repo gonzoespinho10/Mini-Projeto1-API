@@ -1,13 +1,13 @@
-//Constante com host e com a key da API
+// Constante com host e com a key da API
 
 const x_rapidapi_host = "api-football-v1.p.rapidapi.com";
 const x_rapidapi_key = "a06cb32d05mshcec7ac543b257ffp1ba284jsne9c15de7c013";
 
-//Limpar a Local Storage
+// Limpar a Local Storage
 localStorage.clear();
 
 
-//Obter equipas por Liga e por Ano
+// Obter equipas por Liga e por Ano
 
 getStandingsByLeagueIDAndSeason(94, 2021);
 
@@ -35,7 +35,7 @@ function getStandingsByLeagueIDAndSeason(teamID, season) {
         });
 }
 
-//No OnClick passar a id da equipa certa
+// No OnClick passar a id da equipa certa
 
 function renderStandings(standings) {
 
@@ -44,18 +44,18 @@ function renderStandings(standings) {
         $("#ligaPortuguesa").append
         ('<div class="accordion-item">' +
             '<h2 class="accordion-header" id="heading' + value.team.id + '">' +
-                '<button class="accordion-button collapsed" onclick="renderPlayerList('+value.team.id+')" type="button" ' +
-                'data-bs-toggle="collapse" data-bs-target="#collapse'+value.team.id+'"'+
-                ' aria-expanded="false" aria-controls="collapse'+value.team.id+'">' +
-                ' '+value.team.name+' '+
-                '</button>'+
-                '<div id="collapse'+value.team.id+'" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">' +
-                '<div class="accordion-body" id="acc-body'+value.team.id+'">'+
-                '<ul class="row list-group" style="flex-direction: row" id="jogadores'+value.team.id+'"></ul>'+
-                '</div>'+
+            '<button class="accordion-button collapsed" onclick="renderPlayerList(' + value.team.id + ')" type="button" ' +
+            'data-bs-toggle="collapse" data-bs-target="#collapse' + value.team.id + '"' +
+            ' aria-expanded="false" aria-controls="collapse' + value.team.id + '">' +
+            ' ' + value.team.name + ' ' +
+            '</button>' +
+            '<div id="collapse' + value.team.id + '" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">' +
+            '<div class="accordion-body" id="acc-body' + value.team.id + '">' +
+            '<ul class="row list-group" style="flex-direction: row" id="jogadores' + value.team.id + '"></ul>' +
+            '</div>' +
             '</div>' +
             '</h2>' +
-        '</div>');
+            '</div>');
     })
 }
 
@@ -87,19 +87,19 @@ function renderPlayerList(teamID) {
                 $(jogId).append
                 ('<button type="button" class="btn col-md-4 rounded" onclick="openModal(' + value.player.id + ')" data-toggle="modal" data-target="#modalJogadores" >' +
                     '<li class="list-group-item display-5 fs-4" style="display: block; text-align: start" id=' + value.player.id + '>' +
-                        '<img class="img-thumbnail rounded-circle float-left m-3" alt="perfil" src="' + value.player.photo + '">' + value.player.name +
+                    '<img class="img-thumbnail rounded-circle float-left m-3" alt="perfil" src="' + value.player.photo + '">' + value.player.name +
                     '</li>' +
-                '</button>'
+                    '</button>'
                 );
             });
         })
-        .catch(err => {
-            console.error(err);
-        });
+            .catch(err => {
+                console.error(err);
+            });
     }
 }
 
-//Fetch do jogador de forma assíncrona
+// Fetch do jogador de forma assíncrona
 async function fetchPlayer(playerID) {
     try {
         const response = await fetch("https://api-football-v1.p.rapidapi.com/v3/players?id=" + playerID + "&season=2021", {
@@ -116,7 +116,7 @@ async function fetchPlayer(playerID) {
     }
 }
 
-//Abrir Modal
+// Abrir Modal
 async function openModal(playerID) {
 
     // referência do modal
@@ -133,24 +133,40 @@ async function openModal(playerID) {
     console.log(player.response[0].statistics);
 
     // var modalText = document.getElementById('modalText');
-    // //modalText.innerText = playerInfo.name;
+    // modalText.innerText = playerInfo.name;
 
-    // Algoritmo para escrever 0 no número de gajos caso seja null
-    if(playerStats[0].games.appearences == null) {
+    // Algoritmo para escrever 0 no número de jogadores caso seja null
+    if (playerStats[0].games.appearences == null) {
         playerStats[0].games.appearences = 0;
     }
 
+    if (playerStats[0].goals.assists == null) {
+        playerStats[0].goals.assists = 0;
+    }
+
+    $('#modalText')[0].innerHTML = '';
+
+    //Golos Marcados
+    var golos = playerStats[0].goals.total;
+    var assistencias = playerStats[0].goals.assists;
+
+    console.log(golos);
+
+    //if ($("#modalText").innerText = )
+
     // Conteúdo do Modal
-    $("#modalText").append("<h2>" + playerInfo.name + "</h2>" +
+    $("#modalText").append("<h2 class='display-5' style='text-align: center'>" + playerInfo.name + "</h2>" +
+        '<h3 class="display-5 fs-5" style="text-align: center">' + "Posição: " + playerStats[0].games.position + '</h3>' +
         '<hr>' +
-        '<h3>'+"Jogos: " + playerStats[0].games.appearences+'</h3>'+
-        "<button onclick='addPlayerMyList(" + playerID + ")' type='button' class='btn btn-primary'>Add Player</button>" +
-        "<hr>");
+        '<h3 class="display-5 fs-3" style="text-align: center">' + "Jogos: " + playerStats[0].games.appearences + '</h3>' +
+        '<h3 class="display-5 fs-3" style="text-align: center">' + "Golos: " + golos + '</h3>' +
+        '<h3 class="display-5 fs-3" style="text-align: center">' + "Assistências: " + assistencias + '</h3>' +
+        "<button onclick='addPlayerMyList(" + playerID + ")' type='button' class='btn btn-primary'>Adicionar Jogador</button>");
 
     myModal.show();
 }
 
-    //Acrescentar jogador à lista
+//Acrescentar jogador à lista
 function addPlayerMyList(playerID) {
 
     console.log("add player id: " + playerID)
@@ -174,7 +190,7 @@ function addPlayerMyList(playerID) {
 
     var myModalEl = document.getElementById('exampleModal')
 
-    //Fechar modal ao clicar no botão
+    // Fechar modal ao clicar no botão
     var modal = bootstrap.Modal.getInstance(myModalEl)
     modal.hide();
 
