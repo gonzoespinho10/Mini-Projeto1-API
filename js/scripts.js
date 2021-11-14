@@ -1,8 +1,13 @@
+//Constante com host e com a key da API
+
 const x_rapidapi_host = "api-football-v1.p.rapidapi.com";
 const x_rapidapi_key = "a06cb32d05mshcec7ac543b257ffp1ba284jsne9c15de7c013";
 
+//Limpar a Local Storage
 localStorage.clear();
 
+
+//Obter equipas por Liga e por Ano
 
 getStandingsByLeagueIDAndSeason(94, 2021);
 
@@ -22,7 +27,7 @@ function getStandingsByLeagueIDAndSeason(teamID, season) {
             var teamId = standings[0].team.id;
 
             renderStandings(standings);
-            getPlayersByTeamId(teamId);
+            renderPlayerList(teamId);
 
         })
         .catch(err => {
@@ -30,24 +35,7 @@ function getStandingsByLeagueIDAndSeason(teamID, season) {
         });
 }
 
-function getPlayersByTeamId(teamId) {
-    fetch("https://api-football-v1.p.rapidapi.com/v3/players?team=" + teamId + "&season=2021", {
-        "method": "GET",
-        "headers": {
-            "x-rapidapi-host": x_rapidapi_host,
-            "x-rapidapi-key": x_rapidapi_key
-        }
-    })
-        .then(response => {
-            return response.json();
-        })
-        .catch(err => {
-            console.error(err);
-        });
-}
-
-
-// no onclick passar a id da equipa certo
+//No OnClick passar a id da equipa certa
 
 function renderStandings(standings) {
 
@@ -71,6 +59,7 @@ function renderStandings(standings) {
     })
 }
 
+// Render dos Jogadores
 function renderPlayerList(teamID) {
 
     // id da Equipa para dar os jogadores de cada uma
@@ -92,8 +81,8 @@ function renderPlayerList(teamID) {
 
             $.each(players, function (key, value) {
 
-                // escrever apenas no body-accordion certo
-                //ver selectors de jQuery para escrever apenas no sitio certo
+                // Escrever apenas no body-accordion certo
+                // Ver selectors de jQuery para escrever apenas no sitio certo
 
                 $(jogId).append
                 ('<button type="button" class="btn col-md-4 rounded" onclick="openModal(' + value.player.id + ')" data-toggle="modal" data-target="#modalJogadores" >' +
@@ -110,6 +99,7 @@ function renderPlayerList(teamID) {
     }
 }
 
+//Fetch do jogador de forma assíncrona
 async function fetchPlayer(playerID) {
     try {
         const response = await fetch("https://api-football-v1.p.rapidapi.com/v3/players?id=" + playerID + "&season=2021", {
@@ -126,38 +116,41 @@ async function fetchPlayer(playerID) {
     }
 }
 
+//Abrir Modal
 async function openModal(playerID) {
+
     // referência do modal
     var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {});
 
-    //dados do jogador
-
+    // dados do jogador
     var player = await fetchPlayer(playerID);
 
+    // nome do jogador e estatísticas
     var playerInfo = player.response[0].player
     var playerStats = player.response[0].statistics
 
     console.log(player.response[0].player);
     console.log(player.response[0].statistics);
 
-    var modalText = document.getElementById('modalText');
+    // var modalText = document.getElementById('modalText');
+    // //modalText.innerText = playerInfo.name;
 
-    //modalText.innerText = playerInfo.name;
-
+    // Algoritmo para escrever 0 no número de gajos caso seja null
     if(playerStats[0].games.appearences == null) {
         playerStats[0].games.appearences = 0;
     }
 
+    // Conteúdo do Modal
     $("#modalText").append("<h2>" + playerInfo.name + "</h2>" +
         '<hr>' +
         '<h3>'+"Jogos: " + playerStats[0].games.appearences+'</h3>'+
         "<button onclick='addPlayerMyList(" + playerID + ")' type='button' class='btn btn-primary'>Add Player</button>" +
         "<hr>");
 
-
     myModal.show();
 }
 
+    //Acrescentar jogador à lista
 function addPlayerMyList(playerID) {
 
     console.log("add player id: " + playerID)
@@ -165,15 +158,14 @@ function addPlayerMyList(playerID) {
     // Retrieve the object from storage
     var players = JSON.parse(localStorage.getItem("playerList"));
 
-
     console.log(players);
 
-    // inicializar caso não exista
+    // Inicializar caso não exista
     if (players === null) {
         players = [];
     }
 
-    // adicionar jogador ao array
+    // Adicionar jogador ao array
     players.push(playerID);
 
 
@@ -182,8 +174,8 @@ function addPlayerMyList(playerID) {
 
     var myModalEl = document.getElementById('exampleModal')
 
-    var modal = bootstrap.Modal.getInstance(myModalEl) // Returns a Bootstrap modal instance
-
+    //Fechar modal ao clicar no botão
+    var modal = bootstrap.Modal.getInstance(myModalEl)
     modal.hide();
 
 }
