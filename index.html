@@ -21,7 +21,8 @@
 
     <title>Hello, world!</title>
 </head>
-<body>
+
+<body onload="getStandingsByLeagueIDAndSeason(94, 2021)">
 
 <div class="container-fluid">
 
@@ -34,9 +35,9 @@
 
         <div class="col-md-4 check-team">
             My team
-            <button style="width: 50%" type="button" class="btn img-thumbnail float-right">
+            <a href="myTeam.html" style="width: 50%" type="button" class="btn img-thumbnail float-right">
                 <img alt="soccer" style="height: 70px;" src="img/soccer.png">
-            </button>
+            </a>
         </div>
     </div>
 
@@ -51,8 +52,8 @@
                 <div class="modal-body" id="modalText">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" id="addButton" class="btn btn-primary">Adicionar Jogador</button>
+                    <button type="button" id="removeButton" class="btn btn-danger">Remover Jogador</button>
                 </div>
             </div>
         </div>

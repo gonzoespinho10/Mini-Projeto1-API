@@ -3,16 +3,8 @@
 const x_rapidapi_host = "api-football-v1.p.rapidapi.com";
 const x_rapidapi_key = "a06cb32d05mshcec7ac543b257ffp1ba284jsne9c15de7c013";
 
-// Limpar a Local Storage
-localStorage.clear();
-
-
-// Obter equipas por Liga e por Ano
-
-getStandingsByLeagueIDAndSeason(94, 2021);
-
-function getStandingsByLeagueIDAndSeason(teamID, season) {
-    fetch("https://api-football-v1.p.rapidapi.com/v3/standings?season=" + season + "&league=" + teamID, {
+function getStandingsByLeagueIDAndSeason(leagueID, season) {
+    fetch("https://api-football-v1.p.rapidapi.com/v3/standings?season=" + season + "&league=" + leagueID, {
         "method": "GET",
         "headers": {
             "x-rapidapi-host": x_rapidapi_host,
@@ -24,11 +16,8 @@ function getStandingsByLeagueIDAndSeason(teamID, season) {
         })
         .then(data => {
             var standings = data.response[0].league.standings[0];
-            var teamId = standings[0].team.id;
 
             renderStandings(standings);
-            renderPlayerList(teamId);
-
         })
         .catch(err => {
             console.error(err);
@@ -36,7 +25,6 @@ function getStandingsByLeagueIDAndSeason(teamID, season) {
 }
 
 // No OnClick passar a id da equipa certa
-
 function renderStandings(standings) {
 
     $.each(standings, function (key, value) {
@@ -61,6 +49,8 @@ function renderStandings(standings) {
 
 // Render dos Jogadores
 function renderPlayerList(teamID) {
+
+    console.log("render player list: " + teamID)
 
     // id da Equipa para dar os jogadores de cada uma
     var jogId = $("#jogadores" + teamID);
@@ -91,8 +81,8 @@ function renderPlayerList(teamID) {
                 btnModal.type = 'button';
                 btnModal.className = "btn col-md-4 rounded";
                 btnModal.addEventListener("click", function (){
-                    openModal(playersID);
-                })
+                    openModal(JSON.stringify(value));
+                });
                 btnModal.setAttribute("data-toggle", "modal");
                 btnModal.setAttribute("data-target", "#modalJogadores");
 
@@ -118,14 +108,6 @@ function renderPlayerList(teamID) {
                 btnModal.append(listJogador);
 
                 $(jogId).append(btnModal);
-
-                // $(jogId).append
-                // ('<button type="button" class="btn col-md-4 rounded" onclick="openModal(' + value.player.id + ')" data-toggle="modal" data-target="#modalJogadores" >' +
-                //     '<li class="list-group-item display-5 fs-4" style="display: block; text-align: start" id=' + value.player.id + '>' +
-                //     '<img class="img-thumbnail rounded-circle float-left m-3" alt="perfil" src="' + value.player.photo + '">' + value.player.name +
-                //     '</li>' +
-                //     '</button>'
-                // );
             });
         })
             .catch(err => {
@@ -134,36 +116,37 @@ function renderPlayerList(teamID) {
     }
 }
 
-// Fetch do jogador de forma assíncrona
-async function fetchPlayer(playerID) {
-    try {
-        const response = await fetch("https://api-football-v1.p.rapidapi.com/v3/players?id=" + playerID + "&season=2021", {
-            "method": "GET",
-            "headers": {
-                "x-rapidapi-host": x_rapidapi_host,
-                "x-rapidapi-key": x_rapidapi_key
-            }
-        });
-
-        return await response.json();
-    } catch (error) {
-        console.error(error);
-    }
-}
+// // Fetch do jogador de forma assíncrona
+// async function fetchPlayer(playerID) {
+//     try {
+//         const response = await fetch("https://api-football-v1.p.rapidapi.com/v3/players?id=" + playerID + "&season=2021", {
+//             "method": "GET",
+//             "headers": {
+//                 "x-rapidapi-host": x_rapidapi_host,
+//                 "x-rapidapi-key": x_rapidapi_key
+//             }
+//         });
+//
+//         return await response.json();
+//     } catch (error) {
+//         console.error(error);
+//     }
+// }
 
 // Abrir Modal
-async function openModal(playerID) {
-
-
+async function openModal(player) {
     // referência do modal
     var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {});
 
     // dados do jogador
-    var player = await fetchPlayer(playerID);
+    //var player = await fetchPlayer(playerID);
+    //console.log(player);
+
+    var playerToJson = JSON.parse(player);
 
     // nome do jogador e estatísticas
-    var playerInfo = player.response[0].player
-    var playerStats = player.response[0].statistics
+    var playerInfo = playerToJson.player;
+    var playerStats = playerToJson.statistics;
 
     // Algoritmo para escrever 0 no número de jogadores caso seja null
     if (playerStats[0].games.appearences == null) {
@@ -187,8 +170,7 @@ async function openModal(playerID) {
 
     var jogos = playerStats[0].games.appearences;
 
-// Criar conteúdo do modal
-
+    // Criar conteúdo do modal
     var name = document.createElement('h2');
     name.className = "display-5";
     name.style.textAlign = "center";
@@ -227,18 +209,34 @@ async function openModal(playerID) {
     // Botão de adicionar
     // Tirar evento de click anterior
     $('#addButton').unbind('click');
+
     // Adicionar novo evento
     $('#addButton').click(function(){
-        addPlayerMyList(playerID)
+        addPlayerMyList(player)
+    });
+
+    $('#removeButton').unbind('click');
+    // Adicionar novo evento
+    $('#removeButton').click(function(){
+        removePlayerMyList(player)
     });
 
     myModal.show();
 }
 
+// Retrieve the object from storage
+function getListFromLocalStorage() {
+    return JSON.parse(localStorage.getItem("playerList"));
+}
+
+// Put the object into storage
+function setListFromLocalStorage(playerList) {
+    localStorage.setItem("playerList", JSON.stringify(playerList));
+}
+
 //Acrescentar jogador à lista
-function addPlayerMyList(playerID) {
-    // Retrieve the object from storage
-    var players = JSON.parse(localStorage.getItem("playerList"));
+function addPlayerMyList(player) {
+    var players = getListFromLocalStorage();
 
     // Inicializar caso não exista
     if (players === null) {
@@ -246,22 +244,47 @@ function addPlayerMyList(playerID) {
     }
 
     // Verificar se já existe no array
-    if (jQuery.inArray( playerID, players ) === -1){
+    if (jQuery.inArray( player, players ) === -1){
         // Adicionar jogador ao array
-        players.push(playerID);
+        players.push(player);
     }
+
+    setListFromLocalStorage(players);
+    closeModal();
+}
+
+function removePlayerMyList(player) {
+    // Retrieve the object from storage
+    var players = getListFromLocalStorage();
+
+    // remove player from list
+    players = jQuery.grep(players, function(value) {
+        return value != player;
+    });
 
     // Put the object into storage
     localStorage.setItem("playerList", JSON.stringify(players));
 
+    setListFromLocalStorage(players);
+    closeModal();
+}
+
+function closeModal() {
     var myModalEl = document.getElementById('exampleModal')
-
-    // Fechar modal ao clicar no botão
     var modal = bootstrap.Modal.getInstance(myModalEl)
-
     modal.hide();
 }
 
-function removePlayerMyList(playerID) {
-    localStorage.removeItem(playerID);
+function renderMyPlayersTable() {
+    // Retrieve the object from storage
+    var players = getListFromLocalStorage();
+
+    $.each(players, function (key, value) {
+
+        $("#myPlayersListRows").append
+        ("<tr>" +
+            "<th scope=\"row\">1</th>" +
+            "            <td>Mark</td>\n" +
+            "        </tr>");
+    })
 }
