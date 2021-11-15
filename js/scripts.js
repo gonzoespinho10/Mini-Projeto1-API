@@ -1,28 +1,8 @@
-// Constante com host e com a key da API
-
+// Constantes com host e com a key da API
 const x_rapidapi_host = "api-football-v1.p.rapidapi.com";
 const x_rapidapi_key = "a06cb32d05mshcec7ac543b257ffp1ba284jsne9c15de7c013";
 
-function getStandingsByLeagueIDAndSeason(leagueID, season) {
-    fetch("https://api-football-v1.p.rapidapi.com/v3/standings?season=" + season + "&league=" + leagueID, {
-        "method": "GET",
-        "headers": {
-            "x-rapidapi-host": x_rapidapi_host,
-            "x-rapidapi-key": x_rapidapi_key
-        }
-    })
-        .then(response => {
-            return response.json();
-        })
-        .then(data => {
-            var standings = data.response[0].league.standings[0];
 
-            renderStandings(standings);
-        })
-        .catch(err => {
-            console.error(err);
-        });
-}
 
 // Render equipas por ordem das classificações
 function renderStandings(standings) {

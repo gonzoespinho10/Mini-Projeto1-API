@@ -27,6 +27,7 @@ function checkMaxOfSameTeam(players) {
 }
 
 // valida a lista final de jogadores
+// verifica cada condição e devolve potenciais erros no final
 function validatePLayerList() {
 
     const players = getListFromLocalStorage();
@@ -69,7 +70,7 @@ function validatePLayerList() {
 
 // Valida se o numero minimo e maximo de jogadores é respeitado
 function validateTeamSize(players) {
-    // code
+    return true;
 }
 
 
