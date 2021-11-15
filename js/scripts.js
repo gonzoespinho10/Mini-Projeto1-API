@@ -29,12 +29,15 @@ function renderStandings(standings) {
 
     $.each(standings, function (key, value) {
 
+        console.log(value);
+
         $("#ligaPortuguesa").append
         ('<div class="accordion-item">' +
             '<h2 class="accordion-header" id="heading' + value.team.id + '">' +
             '<button class="accordion-button collapsed" onclick="renderPlayerList(' + value.team.id + ')" type="button" ' +
             'data-bs-toggle="collapse" data-bs-target="#collapse' + value.team.id + '"' +
             ' aria-expanded="false" aria-controls="collapse' + value.team.id + '">' +
+            '<img class="foto-clube" src="'+value.team.logo+'">'+
             ' ' + value.team.name + ' ' +
             '</button>' +
             '<div id="collapse' + value.team.id + '" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">' +
@@ -134,13 +137,9 @@ function renderPlayerList(teamID) {
 // }
 
 // Abrir Modal
-async function openModal(player) {
+function openModal(player) {
     // referência do modal
     var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {});
-
-    // dados do jogador
-    //var player = await fetchPlayer(playerID);
-    //console.log(player);
 
     var playerToJson = JSON.parse(player);
 
@@ -161,6 +160,7 @@ async function openModal(player) {
 
     // Golos Marcados
     var golos = playerStats[0].goals.total;
+
     // Assistências
     var assistencias = playerStats[0].goals.assists;
 
@@ -181,7 +181,7 @@ async function openModal(player) {
     position.style.textAlign = "center";
     position.innerText = "Posição:"+posicao
 
-    linha = document.createElement('hr');
+    var linha = document.createElement('hr');
 
     var games = document.createElement('h3');
     games.className = "lead fs-2";
@@ -236,6 +236,7 @@ function setListFromLocalStorage(playerList) {
 
 //Acrescentar jogador à lista
 function addPlayerMyList(player) {
+
     var players = getListFromLocalStorage();
 
     // Inicializar caso não exista
@@ -266,7 +267,6 @@ function removePlayerMyList(player) {
     localStorage.setItem("playerList", JSON.stringify(players));
 
     setListFromLocalStorage(players);
-    closeModal();
 }
 
 function closeModal() {
@@ -281,10 +281,67 @@ function renderMyPlayersTable() {
 
     $.each(players, function (key, value) {
 
-        $("#myPlayersListRows").append
-        ("<tr>" +
-            "<th scope=\"row\">1</th>" +
-            "            <td>Mark</td>\n" +
-            "        </tr>");
+        var playerInfo = JSON.parse(value);
+
+        console.log(playerInfo);
+
+        // Criar td
+        var tableDataNome = document.createElement('td');
+        tableDataNome.className = "align-middle"
+
+        var tableDataClube = document.createElement('td');
+        tableDataClube.className = "align-middle display-5 fs-5";
+        tableDataClube.textContent = playerInfo.statistics[0].team.name;
+
+        var logoClube = document.createElement('td');
+        logoClube.className = "align-middle"
+
+        var delRow = document.createElement('td');
+        delRow.className = "align-middle";
+
+        var deleteBtn = document.createElement('button');
+        deleteBtn.type = 'button';
+        deleteBtn.id = playerInfo.player.id;
+        deleteBtn.className = "btn btn-danger";
+        deleteBtn.innerText = "Remover Jogador";
+        deleteBtn.addEventListener('click', function (){
+            removePlayerMyList(value);
+            window.location.reload();
+        })
+
+        var logoEquipa = document.createElement('img');
+        logoEquipa.className = "foto-jogador";
+        logoEquipa.src = playerInfo.statistics[0].team.logo;
+
+        var nomeJogador = document.createElement('span');
+        nomeJogador.textContent = playerInfo.player.name;
+        nomeJogador.className = "display-5 fs-3";
+
+
+        var tableHead = document.createElement('th');
+        tableHead.scope = "row";
+        tableHead.style.display = "flex";
+        tableHead.style.justifyContent = "center";
+
+        var imgJogador = document.createElement('img');
+        imgJogador.className = "img-thumbnail rounded-circle float-left m3 foto-jogador";
+        imgJogador.style.marginRight = "20px";
+        imgJogador.alt = "perfil";
+        imgJogador.src = playerInfo.player.photo;
+
+        tableHead.append(imgJogador);
+        tableDataNome.append(nomeJogador);
+        logoClube.append(logoEquipa);
+        delRow.append(deleteBtn)
+
+        var tableRow = document.createElement('tr');
+
+        tableRow.append(tableHead)
+        tableRow.append(tableDataNome)
+        tableRow.append(tableDataClube)
+        tableRow.append(logoClube)
+        tableRow.append(delRow)
+
+        $('#myPlayersListRows').append(tableRow)
     })
 }

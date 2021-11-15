@@ -23,20 +23,30 @@
 
 <body onload="renderMyPlayersTable()">
 
-
 <div class="container-fluid">
+
+<div class="table-responsive">
 
     <table class="table">
         <thead>
         <tr>
             <th scope="col">#</th>
             <th scope="col">Nome</th>
+            <th scope="col">Equipa</th>
+            <th scope="col">Logo</th>
+            <th scope="col">Delete</th>
+
         </tr>
         </thead>
         <tbody id="myPlayersListRows">
-
         </tbody>
     </table>
+
+</div>
+
+<div id="backButton">
+    <a href="index.html"><button style="display: flex; margin-left: 46%" class="btn btn-dark">Back</button></a>
+</div>
 
 </div>
 </body>
