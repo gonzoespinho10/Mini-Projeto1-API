@@ -24,12 +24,10 @@ function getStandingsByLeagueIDAndSeason(leagueID, season) {
         });
 }
 
-// No OnClick passar a id da equipa certa
+// Render equipas por ordem das classificações
 function renderStandings(standings) {
 
     $.each(standings, function (key, value) {
-
-        console.log(value);
 
         $("#ligaPortuguesa").append
         ('<div class="accordion-item">' +
@@ -52,8 +50,6 @@ function renderStandings(standings) {
 
 // Render dos Jogadores
 function renderPlayerList(teamID) {
-
-    console.log("render player list: " + teamID)
 
     // id da Equipa para dar os jogadores de cada uma
     var jogId = $("#jogadores" + teamID);
@@ -118,23 +114,6 @@ function renderPlayerList(teamID) {
             });
     }
 }
-
-// // Fetch do jogador de forma assíncrona
-// async function fetchPlayer(playerID) {
-//     try {
-//         const response = await fetch("https://api-football-v1.p.rapidapi.com/v3/players?id=" + playerID + "&season=2021", {
-//             "method": "GET",
-//             "headers": {
-//                 "x-rapidapi-host": x_rapidapi_host,
-//                 "x-rapidapi-key": x_rapidapi_key
-//             }
-//         });
-//
-//         return await response.json();
-//     } catch (error) {
-//         console.error(error);
-//     }
-// }
 
 // Abrir Modal
 function openModal(player) {
@@ -234,7 +213,6 @@ function setListFromLocalStorage(playerList) {
     localStorage.setItem("playerList", JSON.stringify(playerList));
 }
 
-//Acrescentar jogador à lista
 function addPlayerMyList(player) {
 
     var players = getListFromLocalStorage();
@@ -246,11 +224,22 @@ function addPlayerMyList(player) {
 
     // Verificar se já existe no array
     if (jQuery.inArray( player, players ) === -1){
+
         // Adicionar jogador ao array
         players.push(player);
+
+        // Verificar max of same team
+        if (checkMaxOfSameTeam(players)){
+            setListFromLocalStorage(players);
+
+            showAlertSucess("Jogador adicionado à sua lista.");
+        } else {
+            showAlertError("Excedeu o número máximo de jogadores desta equipa.");
+        }
+    } else {
+        showAlertError("O Jogador já foi adicionado.");
     }
 
-    setListFromLocalStorage(players);
     closeModal();
 }
 
@@ -267,6 +256,8 @@ function removePlayerMyList(player) {
     localStorage.setItem("playerList", JSON.stringify(players));
 
     setListFromLocalStorage(players);
+
+    showAlertSucess("Jogador removido da sua lista.")
 }
 
 function closeModal() {
@@ -282,8 +273,6 @@ function renderMyPlayersTable() {
     $.each(players, function (key, value) {
 
         var playerInfo = JSON.parse(value);
-
-        console.log(playerInfo);
 
         // Criar td
         var tableDataNome = document.createElement('td');
@@ -306,7 +295,10 @@ function renderMyPlayersTable() {
         deleteBtn.innerText = "Remover Jogador";
         deleteBtn.addEventListener('click', function (){
             removePlayerMyList(value);
-            window.location.reload();
+
+            // remove jogador da tabela
+            var row = $("tr#"+ playerInfo.player.id + "");
+            row.remove();
         })
 
         var logoEquipa = document.createElement('img');
@@ -316,7 +308,6 @@ function renderMyPlayersTable() {
         var nomeJogador = document.createElement('span');
         nomeJogador.textContent = playerInfo.player.name;
         nomeJogador.className = "display-5 fs-3";
-
 
         var tableHead = document.createElement('th');
         tableHead.scope = "row";
@@ -336,6 +327,8 @@ function renderMyPlayersTable() {
 
         var tableRow = document.createElement('tr');
 
+        // guardar id do jogador na row para depois poder remover
+        tableRow.id = playerInfo.player.id
         tableRow.append(tableHead)
         tableRow.append(tableDataNome)
         tableRow.append(tableDataClube)
