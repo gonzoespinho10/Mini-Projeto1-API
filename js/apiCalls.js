@@ -21,6 +21,22 @@ function getStandingsByLeagueIDAndSeason(leagueID, season) {
         });
 }
 
-function getPlayerByTeamAndTeamID(teamID, season) {
 
+function getPlayerByTeamAndTeamID(teamID, season) {
+    fetch("https://api-football-v1.p.rapidapi.com/v3/standings?season=" + season + "&teamsleague=" + teamID, {
+        "method": "GET",
+        "headers": {
+            "x-rapidapi-host": x_rapidapi_host,
+            "x-rapidapi-key": x_rapidapi_key
+        }
+    })
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            console.log(data.response);
+        })
+        .catch(err => {
+            console.error(err);
+        });
 }

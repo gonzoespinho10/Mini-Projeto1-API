@@ -97,6 +97,7 @@ function renderPlayerList(teamID) {
 
 // Abrir Modal
 function openModal(player) {
+
     // referência do modal
     var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {});
 
@@ -114,6 +115,11 @@ function openModal(player) {
     if (playerStats[0].goals.assists == null) {
         playerStats[0].goals.assists = 0;
     }
+
+    if (playerStats[0].goals.total == null) {
+        playerStats[0].goals.total = 0;
+    }
+
 
     $('#modalText')[0].innerHTML = '';
 
@@ -203,118 +209,120 @@ function addPlayerMyList(player) {
     }
 
     // Verificar se já existe no array
-    if (jQuery.inArray( player, players ) === -1){
+    if (jQuery.inArray(player, players) === -1) {
 
         // Adicionar jogador ao array
         players.push(player);
 
-        // Verificar max of same team
-        if (checkMaxOfSameTeam(players)){
-            setListFromLocalStorage(players);
+    // Verificar max of same team
+    if (checkMaxOfSameTeam(players, player)){
+        setListFromLocalStorage(players);
 
-            showAlertSucess("Jogador adicionado à sua lista.");
-        } else {
-            showAlertError("Excedeu o número máximo de jogadores desta equipa.");
-        }
+        showAlertSucess("Jogador adicionado à sua lista.");
     } else {
-        showAlertError("O Jogador já foi adicionado.");
+        showAlertError("Excedeu o número máximo de jogadores desta equipa.");
     }
+}
+    else {
+    showAlertError("O Jogador já foi adicionado.");
+}
 
-    closeModal();
+        //setListFromLocalStorage(players);
+
+        closeModal();
 }
 
 function removePlayerMyList(player) {
-    // Retrieve the object from storage
-    var players = getListFromLocalStorage();
+        // Retrieve the object from storage
+        var players = getListFromLocalStorage();
 
-    // remove player from list
-    players = jQuery.grep(players, function(value) {
-        return value != player;
-    });
+        // remove player from list
+        players = jQuery.grep(players, function (value) {
+            return value != player;
+        });
 
-    // Put the object into storage
-    localStorage.setItem("playerList", JSON.stringify(players));
+        // Put the object into storage
+        localStorage.setItem("playerList", JSON.stringify(players));
 
-    setListFromLocalStorage(players);
+        setListFromLocalStorage(players);
 
-    showAlertSucess("Jogador removido da sua lista.")
-}
+        showAlertSucess("Jogador removido da sua lista.")
+    }
 
-function closeModal() {
-    var myModalEl = document.getElementById('exampleModal')
-    var modal = bootstrap.Modal.getInstance(myModalEl)
-    modal.hide();
-}
+    function closeModal() {
+        var myModalEl = document.getElementById('exampleModal')
+        var modal = bootstrap.Modal.getInstance(myModalEl)
+        modal.hide();
+    }
 
-function renderMyPlayersTable() {
-    // Retrieve the object from storage
-    var players = getListFromLocalStorage();
+    function renderMyPlayersTable() {
+        // Retrieve the object from storage
+        var players = getListFromLocalStorage();
 
-    $.each(players, function (key, value) {
+        $.each(players, function (key, value) {
 
-        var playerInfo = JSON.parse(value);
+            var playerInfo = JSON.parse(value);
 
-        // Criar td
-        var tableDataNome = document.createElement('td');
-        tableDataNome.className = "align-middle"
+            // Criar td
+            var tableDataNome = document.createElement('td');
+            tableDataNome.className = "align-middle"
 
-        var tableDataClube = document.createElement('td');
-        tableDataClube.className = "align-middle display-5 fs-5";
-        tableDataClube.textContent = playerInfo.statistics[0].team.name;
+            var tableDataClube = document.createElement('td');
+            tableDataClube.className = "align-middle display-5 fs-5";
+            tableDataClube.textContent = playerInfo.statistics[0].team.name;
 
-        var logoClube = document.createElement('td');
-        logoClube.className = "align-middle"
+            var logoClube = document.createElement('td');
+            logoClube.className = "align-middle"
 
-        var delRow = document.createElement('td');
-        delRow.className = "align-middle";
+            var delRow = document.createElement('td');
+            delRow.className = "align-middle";
 
-        var deleteBtn = document.createElement('button');
-        deleteBtn.type = 'button';
-        deleteBtn.id = playerInfo.player.id;
-        deleteBtn.className = "btn btn-danger";
-        deleteBtn.innerText = "Remover Jogador";
-        deleteBtn.addEventListener('click', function (){
-            removePlayerMyList(value);
+            var deleteBtn = document.createElement('button');
+            deleteBtn.type = 'button';
+            deleteBtn.id = playerInfo.player.id;
+            deleteBtn.className = "btn btn-danger";
+            deleteBtn.innerText = "Remover Jogador";
+            deleteBtn.addEventListener('click', function () {
+                removePlayerMyList(value);
 
-            // remove jogador da tabela
-            var row = $("tr#"+ playerInfo.player.id + "");
-            row.remove();
+                // remove jogador da tabela
+                var row = $("tr#" + playerInfo.player.id + "");
+                row.remove();
+            })
+
+            var logoEquipa = document.createElement('img');
+            logoEquipa.className = "foto-jogador";
+            logoEquipa.src = playerInfo.statistics[0].team.logo;
+
+            var nomeJogador = document.createElement('span');
+            nomeJogador.textContent = playerInfo.player.name;
+            nomeJogador.className = "display-5 fs-3";
+
+            var tableHead = document.createElement('th');
+            tableHead.scope = "row";
+            tableHead.className = "scope";
+
+
+            var imgJogador = document.createElement('img');
+            imgJogador.className = "img-thumbnail rounded-circle foto-jogador";
+            imgJogador.alt = "perfil";
+            imgJogador.src = playerInfo.player.photo;
+
+            tableHead.append(imgJogador);
+            tableDataNome.append(nomeJogador);
+            logoClube.append(logoEquipa);
+            delRow.append(deleteBtn)
+
+            var tableRow = document.createElement('tr');
+
+            // guardar id do jogador na row para depois poder remover
+            tableRow.id = playerInfo.player.id
+            tableRow.append(tableHead)
+            tableRow.append(tableDataNome)
+            tableRow.append(tableDataClube)
+            tableRow.append(logoClube)
+            tableRow.append(delRow)
+
+            $('#myPlayersListRows').append(tableRow)
         })
-
-        var logoEquipa = document.createElement('img');
-        logoEquipa.className = "foto-jogador";
-        logoEquipa.src = playerInfo.statistics[0].team.logo;
-
-        var nomeJogador = document.createElement('span');
-        nomeJogador.textContent = playerInfo.player.name;
-        nomeJogador.className = "display-5 fs-3";
-
-        var tableHead = document.createElement('th');
-        tableHead.scope = "row";
-        tableHead.style.display = "flex";
-        tableHead.style.justifyContent = "center";
-
-        var imgJogador = document.createElement('img');
-        imgJogador.className = "img-thumbnail rounded-circle float-left m3 foto-jogador";
-        imgJogador.style.marginRight = "20px";
-        imgJogador.alt = "perfil";
-        imgJogador.src = playerInfo.player.photo;
-
-        tableHead.append(imgJogador);
-        tableDataNome.append(nomeJogador);
-        logoClube.append(logoEquipa);
-        delRow.append(deleteBtn)
-
-        var tableRow = document.createElement('tr');
-
-        // guardar id do jogador na row para depois poder remover
-        tableRow.id = playerInfo.player.id
-        tableRow.append(tableHead)
-        tableRow.append(tableDataNome)
-        tableRow.append(tableDataClube)
-        tableRow.append(logoClube)
-        tableRow.append(delRow)
-
-        $('#myPlayersListRows').append(tableRow)
-    })
-}
+    }
