@@ -36,8 +36,13 @@ function validatePLayerList() {
     let isValid = true;
     let errorMsg = "";
 
-    if(validateTeamSize(players) === false){
-        errorMsg += "Jogadores em excesso. ";
+    if(validateMinTeamSize(players) === false){
+        errorMsg += "Jogadores a menos. ";
+        isValid = false;
+    }
+
+    if(validateMaxTeamSize(players) === false){
+        errorMsg += "Jogadores a mais. ";
         isValid = false;
     }
 
@@ -71,8 +76,13 @@ function validatePLayerList() {
 }
 
 // Valida se o numero mínimo e máximo de jogadores é respeitado
-function validateTeamSize(players) {
-    return players.length >= minTeamSize && players.length <= maxTeamSize;
+function validateMinTeamSize(players) {
+    return players.length >= minTeamSize ;
+}
+
+// Valida se o numero maximo e máximo de jogadores é respeitado
+function validateMaxTeamSize(players) {
+    return players.length <= maxTeamSize;
 }
 
 // Valida o numero maximo de guarda-redes
@@ -90,21 +100,4 @@ function validatePositionMax(players, position, maxNumber) {
     });
 
     return count <= maxNumber;
-}
-
-// Valida o numero maximo de guarda-redes
-// Retorna true se o limite for respeitado
-function validateGoalkeepers(players) {
-    let count = 0;
-
-    $.each(players, function( key, player ) {
-        var playerInfo = JSON.parse(player);
-        var playerPosition = playerInfo.statistics[0].games.position;
-
-        if(playerPosition === "Goalkeeper") {
-            count++;
-        }
-    });
-
-    return count <= maxGoalkeepers;
 }
