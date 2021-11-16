@@ -35,6 +35,32 @@ body{
 }
 
 #titulo {
-    margin-top: 10px;
+    margin-top: 12px;
+    text-align: center;
+    font-family: 'Bebas Neue', cursive;}
+
+.posicao {
+    display: flex;
+    margin-left: inherit;
+}
+#listJogador:hover {
+    background-color: #6c757d;
 }
 
+.list-group-item-action:hover {
+    background-color: #abdde5;
+}
+
+#rules{
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+
+#rulesBtn{
+    margin-left: 10px;
+}
+
+.navbar{
+    display: block;
+}
