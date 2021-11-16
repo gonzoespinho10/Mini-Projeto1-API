@@ -104,16 +104,16 @@ function renderPlayerList(teamID) {
 
 // Abrir Modal
 function openModal(player) {
-    // referência do modal
-    var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {});
+    // Referência do modal
+    var myModal = new bootstrap.Modal(document.getElementById('myModal'), {});
 
     var playerToJson = JSON.parse(player);
 
-    // nome do jogador e estatísticas
+    // Nome do jogador e estatísticas
     var playerInfo = playerToJson.player;
     var playerStats = playerToJson.statistics;
 
-    // Algoritmo para escrever 0 no número de jogadores caso seja null
+    // Validação para escrever 0 no número de jogadores caso seja null
     if (playerStats[0].games.appearences == null) {
         playerStats[0].games.appearences = 0;
     }
@@ -202,15 +202,17 @@ function openModal(player) {
     myModal.show();
 }
 
-// Retrieve the object from storage
+// Trazer objeto do Local Storage
 function getListFromLocalStorage() {
     return JSON.parse(localStorage.getItem("playerList"));
 }
 
-// Put the object into storage
+// Por objeto no Local Storage
 function setListFromLocalStorage(playerList) {
     localStorage.setItem("playerList", JSON.stringify(playerList));
 }
+
+// Adicionar jogador à nossa equipa
 
 function addPlayerMyList(player) {
 
@@ -227,7 +229,7 @@ function addPlayerMyList(player) {
         // Adicionar jogador ao array
         players.push(player);
 
-        // Verificar max of same team
+        // Verificar máximo de jogadores por equipa
         if (checkMaxOfSameTeam(players, player)){
             setListFromLocalStorage(players);
 
@@ -243,15 +245,15 @@ function addPlayerMyList(player) {
 }
 
 function removePlayerMyList(player) {
-    // Retrieve the object from storage
+
+    // Trazer dados da local storage
     var players = getListFromLocalStorage();
 
-    // remove player from list
+    // Apagar jogador da lista
     players = jQuery.grep(players, function(value) {
         return value != player;
     });
 
-    // Put the object into storage
     localStorage.setItem("playerList", JSON.stringify(players));
 
     setListFromLocalStorage(players);
@@ -259,6 +261,7 @@ function removePlayerMyList(player) {
     showAlertSucess("Jogador removido da sua lista.")
 }
 
+// Fechar Modal
 function closeModal() {
     var myModalEl = document.getElementById('exampleModal')
     var modal = bootstrap.Modal.getInstance(myModalEl)
@@ -266,14 +269,15 @@ function closeModal() {
 }
 
 function renderMyPlayersTable() {
-    // Retrieve the object from storage
+
+    // Trazer dados da local storage
     var players = getListFromLocalStorage();
 
     $.each(players, function (key, value) {
 
         var playerInfo = JSON.parse(value);
 
-        // Criar td
+        // Criar tabela
         var tableDataNome = document.createElement('td');
         tableDataNome.className = "align-middle"
 
