@@ -22,6 +22,9 @@
 
     <!-- My CSS -->
     <link rel="stylesheet" href="css/site.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 
     <!-- My Scripts -->
     <script src="js/validations.js"></script>
@@ -37,22 +40,31 @@
 
 <body onload="getStandingsByLeagueIDAndSeason(94, 2021)">
 
-<div class="container-fluid">
+
+<nav class="navbar navbar-expand-lg">
+
 
     <div class="row">
 
-        <div class="col-md-8">
-            <h1 id="titulo" class="display-5">Liga Portuguesa Fantasy League 2021</h1>
+        <div id="rules" class="col-md-4">
+
+            <button id="rulesBtn" onclick="rules()" class="btn btn-lg btn-outline-light">Rules</button>
+
+        </div>
+
+        <div class="col-md-4">
+            <h1 id="titulo" class="display-5">Faz a tua equipa</h1>
         </div>
 
         <div class="col-md-4 check-team">
             <span style="display: flex; align-items: center;color: white">MY TEAM</span>
-            <a href="myTeam.html" style="width: 30%" type="button" class="btn img-thumbnail float-right">
+            <a href="myTeam.html" type="button" class="btn img-thumbnail float-right">
                 <img alt="soccer" style="height: 70px;" src="img/soccer.png">
             </a>
         </div>
     </div>
 
+</nav>
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -71,10 +83,13 @@
         </div>
     </div>
 
+<div class="container-fluid">
+
     <!--Criar div Equipas-->
     <div class="accordion" id="ligaPortuguesa">
     </div>
 
 </div>
+
 </body>
 </html>
