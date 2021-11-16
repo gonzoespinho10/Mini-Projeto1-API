@@ -53,6 +53,8 @@ function renderPlayerList(teamID) {
 
                 var playersID = value.player.id;
 
+                console.log(value);
+
                 // criar botão do jogador
                 var btnModal = document.createElement('button');
                 btnModal.type = 'button';
@@ -65,7 +67,7 @@ function renderPlayerList(teamID) {
 
                 // Criar as listas
                 var listJogador = document.createElement('li');
-                listJogador.className = "list-group-item display-5 fs-4";
+                listJogador.className = "list-group-item list-group-item-action display-5 fs-4 listJogador";
                 listJogador.style.display = "block";
                 listJogador.style.textAlign = "start";
                 listJogador.id = playersID;
@@ -79,9 +81,16 @@ function renderPlayerList(teamID) {
                 var nomeJogador = document.createElement('span');
                 nomeJogador.textContent = value.player.name;
                 nomeJogador.color = 'black';
+                nomeJogador.className = 'ms-2'
+
+                var posicaoJogador = document.createElement('span');
+                posicaoJogador.textContent = value.statistics[0].games.position;
+                posicaoJogador.color = 'black';
+                posicaoJogador.className ='fs-5 mt-2 posicao';
 
                 listJogador.append(imgJogador);
                 listJogador.append(nomeJogador);
+                listJogador.append(posicaoJogador);
                 btnModal.append(listJogador);
 
                 $(jogId).append(btnModal);
