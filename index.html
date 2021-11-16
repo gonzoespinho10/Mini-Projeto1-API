@@ -59,7 +59,7 @@
         <div class="col-md-4 check-team">
             <span style="display: flex; align-items: center;color: white">MY TEAM</span>
             <a href="myTeam.html" type="button" class="btn img-thumbnail float-right">
-                <img alt="soccer" style="height: 70px;" src="img/soccer.png">
+                <img alt="soccer" id="myTeam" style="height: 70px;" src="img/soccer.png">
             </a>
         </div>
     </div>
@@ -71,13 +71,13 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" id="btn-close-modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="modalText">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="addButton" class="btn btn-primary">Adicionar Jogador</button>
                     <button type="button" id="removeButton" class="btn btn-danger">Remover Jogador</button>
+                    <button type="button" id="addButton" class="btn btn-primary">Adicionar Jogador</button>
                 </div>
             </div>
         </div>

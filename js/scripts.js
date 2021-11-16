@@ -122,6 +122,10 @@ function openModal(player) {
         playerStats[0].goals.assists = 0;
     }
 
+    if (playerStats[0].goals.total == null) {
+        playerStats[0].goals.total = 0;
+    }
+
     $('#modalText')[0].innerHTML = '';
 
     // Golos Marcados
@@ -137,6 +141,12 @@ function openModal(player) {
     var jogos = playerStats[0].games.appearences;
 
     // Criar conteúdo do modal
+
+    var imgJogador = document.createElement('img');
+    imgJogador.className = "img-thumbnail rounded-circle m3 foto-modal";
+    imgJogador.alt = "perfil";
+    imgJogador.src = playerInfo.photo;
+
     var name = document.createElement('h2');
     name.className = "display-5";
     name.style.textAlign = "center";
@@ -165,6 +175,8 @@ function openModal(player) {
     assists.innerText = "Assistências:" + assistencias
 
     // Render do Conteúdo
+
+    $("#modalText").append(imgJogador);
     $("#modalText").append(name);
     $("#modalText").append(position);
     $("#modalText").append(linha);
