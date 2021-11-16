@@ -25,11 +25,7 @@ function checkMaxOfSameTeam(players, player) {
         }
     });
 
-    if (count > maxOfSameTeam){
-        return false;
-    }
-
-    return true;
+    return count <= maxOfSameTeam;
 }
 
 // Valida a lista final de jogadores
@@ -45,12 +41,12 @@ function validatePLayerList() {
         isValid = false;
     }
 
-    if(validateGoalkeepers(players) === false){
+    if(validatePositionMax(players, "Goalkeeper", maxGoalkeepers) === false){
         errorMsg += "Guarda-redes em excesso. ";
         isValid = false;
     }
 
-    if(validateDefenders(players) === false){
+    if(validatePositionMax(players, "Defender", maxDefenders) === false){
         errorMsg += "Defensas em excesso. ";
         isValid = false;
     }
@@ -76,63 +72,39 @@ function validatePLayerList() {
 
 // Valida se o numero mínimo e máximo de jogadores é respeitado
 function validateTeamSize(players) {
-
-    return true;
+    return players.length <= maxTeamSize;
 }
 
+// Valida o numero maximo de guarda-redes
+// Retorna true se o limite for respeitado
+function validatePositionMax(players, position, maxNumber) {
+    let count = 0;
+
+    $.each(players, function( key, player ) {
+        var playerInfo = JSON.parse(player);
+        var playerPosition = playerInfo.statistics[0].games.position;
+
+        if(playerPosition === position) {
+            count++;
+        }
+    });
+
+    return count <= maxNumber;
+}
 
 // Valida o numero maximo de guarda-redes
 // Retorna true se o limite for respeitado
 function validateGoalkeepers(players) {
-
     let count = 0;
 
     $.each(players, function( key, player ) {
-
         var playerInfo = JSON.parse(player);
         var playerPosition = playerInfo.statistics[0].games.position;
-
-        console.log(playerInfo.player.id + " - " + playerPosition);
 
         if(playerPosition === "Goalkeeper") {
             count++;
         }
     });
 
-    if(count > maxGoalkeepers) {
-        return false
-    }
-    else {
-    return true;
-    }
-}
-
-// Valida o numero maximo de defensas
-// Retorna true se o limite for respeitado
-function validateDefenders(players) {
-
-    $.each(players, function( key, player ) {
-
-        var playerInfo = JSON.parse(player);
-        var playerPosition = playerInfo.statistics[0].games.position;
-
-        console.log(playerInfo.player.id + " - " + playerPosition)
-
-    });
-
-
-
-    return true;
-}
-
-// Valida o numero maximo de meio campo
-// Retorna true se o limite for respeitado
-function validateMidfielders(players) {
-    return true;
-}
-
-// Valida o numero maximo de atacantes
-// Retorna true se o limite for respeitado
-function validateAttackers(players) {
-    return true;
+    return count <= maxGoalkeepers;
 }
