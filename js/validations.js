@@ -2,7 +2,7 @@
 const maxGoalkeepers= 2;
 const maxDefenders = 6;
 const maxMidfielders = 4;
-const maxAttacker = 3;
+const maxAttackers = 3;
 const minTeamSize = 11;
 const maxTeamSize = 15;
 const maxOfSameTeam = 2;
@@ -51,12 +51,12 @@ function validatePLayerList() {
         isValid = false;
     }
 
-    if(validateMidfielders(players) === false){
+    if(validatePositionMax(players, "Midfield", maxMidfielders) === false){
         errorMsg += "Meio campo em excesso. ";
         isValid = false;
     }
 
-    if(validateAttackers(players) === false){
+    if(validatePositionMax(players, "Attacker", maxAttackers) === false){
         errorMsg += "Atacantes em excesso. ";
         isValid = false;
     }
@@ -72,7 +72,7 @@ function validatePLayerList() {
 
 // Valida se o numero mínimo e máximo de jogadores é respeitado
 function validateTeamSize(players) {
-    return players.length <= maxTeamSize;
+    return players.length >= minTeamSize && players.length <= maxTeamSize;
 }
 
 // Valida o numero maximo de guarda-redes
