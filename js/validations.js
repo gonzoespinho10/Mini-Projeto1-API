@@ -9,21 +9,29 @@ const maxOfSameTeam = 2;
 
 // verificar se na lista de jogagadores existem mais do que X jogadores da mesma equipa
 // retorna true se o limite não foi excedido ou false caso contrário
-function checkMaxOfSameTeam(players) {
+function checkMaxOfSameTeam(players, player) {
+
+    let addedPlayerTeamID = JSON.parse(player).statistics[0].team.id;
+    let count = 0 ;
 
     $.each( players, function( key, player ) {
 
         var playerInfo = JSON.parse(player);
-        var playerTeam = playerInfo.statistics[0].team;
 
-        console.log(playerTeam.id + " - " + playerTeam.name)
+        var playerTeamID = playerInfo.statistics[0].team.id;
 
-        if (true){
-            return true;
-        } else {
-            return false;
+        if (playerTeamID === addedPlayerTeamID){
+            count ++
         }
     });
+
+    console.log(count);
+
+    if (count > 2){
+        return false
+    }
+
+    return true;
 }
 
 // valida a lista final de jogadores

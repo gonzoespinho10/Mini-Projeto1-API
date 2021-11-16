@@ -2,8 +2,6 @@
 const x_rapidapi_host = "api-football-v1.p.rapidapi.com";
 const x_rapidapi_key = "a06cb32d05mshcec7ac543b257ffp1ba284jsne9c15de7c013";
 
-
-
 // Render equipas por ordem das classificações
 function renderStandings(standings) {
 
@@ -209,7 +207,7 @@ function addPlayerMyList(player) {
         players.push(player);
 
         // Verificar max of same team
-        if (checkMaxOfSameTeam(players)){
+        if (checkMaxOfSameTeam(players, player)){
             setListFromLocalStorage(players);
 
             showAlertSucess("Jogador adicionado à sua lista.");
