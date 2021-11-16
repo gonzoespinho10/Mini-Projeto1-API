@@ -30,3 +30,11 @@ body{
     justify-content: end;
 }
 
+.table{
+    text-align: center;
+}
+
+#titulo {
+    margin-top: 10px;
+}
+
